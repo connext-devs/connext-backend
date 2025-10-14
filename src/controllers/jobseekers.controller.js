@@ -59,18 +59,43 @@ exports.getJobseeker = async (req, res) => {
     }
 }
 
+exports.getJobseekerCount = async (req, res) => {
+    try {
+        const count = await jobseekersModel.countDocuments();
+
+        res.status(200).json({
+            success: true,
+            totalJobseekers: count,
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false,
+            error: err.message,
+        });
+    }
+};
+
+
 //update profile
 async function handleUpdateProfile(userID, updates) {
     const updatedJobseeker = await jobseekersModel.findByIdAndUpdate(
-        userID,
-        { $set: updates },
-        { new: true, runValidators: true }
+        userID, {
+            $set: updates
+        }, {
+            new: true,
+            runValidators: true
+        }
     );
 
 
     if (!updatedJobseeker) {
         throw new Error("Cannot edit profile. User does not exist");
     }
+    console.log("---");
+
+    console.log(await updatedJobseeker, '------------------------------');
 
     return {
         success: true,
@@ -81,7 +106,11 @@ async function handleUpdateProfile(userID, updates) {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const { editType, data, updates } = req.body;
+        const {
+            editType,
+            data,
+            updates
+        } = req.body;
         const userID = req.params.id;
 
         console.log(data, updates);

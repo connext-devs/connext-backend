@@ -31,7 +31,6 @@ exports.uploadImage = async (req, res) => {
 exports.getUploadKeys = async (req, res) => {
     try {
         const token = uuidv4();
-
         const authenticationParameters = imagekit.getAuthenticationParameters(token);
         res.status(200).json({
             success: true,
@@ -53,16 +52,27 @@ exports.getFileURL = async (req, res) => {
 
     try {
 
+
+        if (!Array.isArray(filePaths)) {
+            return res.status(400).json({
+                success: false,
+                error: "filePaths must be an array"
+            });
+        }
+
         //Validation for files
         const cleanedNames = filePaths.map(path => path.replace(/^\//, ''));
         const searchQuery = cleanedNames.map(name => `name="${name}"`).join(' OR ');
         const files = await imagekit.listFiles({
-            searchQuery
+            filePaths
         });
 
-        if (filePaths.length != files.length) {
-            throw new Error('Failed to fetch, files are missing')
-        }
+        // if (filePaths.length != files.length) {
+        //     throw new Error('Failed to fetch, files are missing')
+        // }
+
+        console.log(cleanedNames);
+        console.log(files);
 
 
         const signedUrls = filePaths.map((path) => ({

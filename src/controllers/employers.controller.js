@@ -9,7 +9,6 @@ exports.registerEmployers = async (req, res) => {
         email,
         companyName,
         industries,
-        verificationDocs
     } = req.body
     try {
         const account = await employersModel.create({
@@ -17,7 +16,6 @@ exports.registerEmployers = async (req, res) => {
             email,
             companyName,
             industries,
-            verificationDocs
         });
 
         console.log("✅ Employer created:", account);

@@ -51,7 +51,6 @@ exports.createApplication = async (req, res) => {
     employerUID,
     seekerUID,
     resume,
-    status
   } = req.body;
 
   try {
@@ -64,7 +63,6 @@ exports.createApplication = async (req, res) => {
       employerUID,
       seekerUID,
       resume,
-      status
     });
 
     res.status(201).json({
@@ -85,8 +83,6 @@ exports.getApplications = async (req, res) => {
   const {
     seekerUID
   } = req.query; // /applications/job/:seekerUID
-
-  console.log("TESTTT", seekerUID);
 
   try {
     const applications = await applicationsModel.find({
@@ -118,19 +114,44 @@ exports.getApplications = async (req, res) => {
 
 //getting applicants count for UX purpose
 exports.getApplicantCounts = async (req, res) => {
-  const { employerUID } = req.query;
+  const {
+    employerUID
+  } = req.query;
 
-  const matchStage = { ...(employerUID && { employerUID }) };
+  const matchStage = {
+    ...(employerUID && {
+      employerUID
+    })
+  };
 
   try {
-    const counts = await applicationsModel.aggregate([
-      { $match: matchStage },
+    const counts = await applicationsModel.aggregate([{
+        $match: matchStage
+      },
       {
         $group: {
           _id: "$jobUID",
-          pending: { $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] } },
-          shortlisted: { $sum: { $cond: [{ $eq: ["$status", "shortlisted"] }, 1, 0] } },
-          viewed: { $sum: { $cond: [{ $eq: ["$status", "viewed"] }, 1, 0] } },
+          pending: {
+            $sum: {
+              $cond: [{
+                $eq: ["$status", "pending"]
+              }, 1, 0]
+            }
+          },
+          shortlisted: {
+            $sum: {
+              $cond: [{
+                $eq: ["$status", "shortlisted"]
+              }, 1, 0]
+            }
+          },
+          viewed: {
+            $sum: {
+              $cond: [{
+                $eq: ["$status", "viewed"]
+              }, 1, 0]
+            }
+          },
         },
       },
     ]);
@@ -255,11 +276,12 @@ exports.getShortlistedApplicants = async (req, res) => {
     jobUID
   }
   if (status) {
-    matchStage.status = status.trim()
+    // Allow status to be a comma-separated string or an array
+    const statuses = Array.isArray(status) ? status : status.split(',').map(s => s.trim());
+    matchStage.status = {
+      $in: statuses
+    };
   }
-
-  console.log(matchStage);
-
   console.log("✅ jobUID:", jobUID);
   console.log("✅ page:", page, "limit:", limit);
 

@@ -46,15 +46,33 @@ const jobseekersSchema = new mongoose.Schema({
         type: {
             country: {
                 type: String
-            },
-            province: {
+            }, // e.g. "Philippines"
+            country_code: {
                 type: String
+            }, // e.g. "ph"
+            name: {
+                type: String
+            }, // e.g. "Quezon"
+            display_name: {
+                type: String
+            }, // e.g. "Quezon, Philippines"
+            lat: {
+                type: String
+            }, // e.g. "13.9"
+            lon: {
+                type: String
+            }, // e.g. "122"
+            province: {
+                type: String,
+                default: null
             },
             city: {
-                type: String
+                type: String,
+                default: null
             },
             postalCode: {
-                type: String
+                type: String,
+                default: null
             }
         },
         default: null
@@ -64,7 +82,7 @@ const jobseekersSchema = new mongoose.Schema({
             degree: {
                 type: String,
                 default: null
-            }, 
+            },
             school: {
                 type: String,
                 default: null
@@ -72,11 +90,11 @@ const jobseekersSchema = new mongoose.Schema({
             status: {
                 type: String,
                 default: null
-            }, 
+            },
             yearLevel: {
                 type: Number,
                 default: null
-            }, 
+            },
             graduationYear: {
                 type: Number,
                 default: null
@@ -97,37 +115,6 @@ const jobseekersSchema = new mongoose.Schema({
         type: String,
         default: "jobseeker"
     },
-    skippedJobs: {
-        type: [String],
-        default: []
-    },
-    shortlistedJobs: [{
-        _id: String,
-        jobUID: String,
-        score: Number,
-        boostWeight: Number,
-        jobTitle: String,
-        jobPoster: String,
-        location: {
-            city: String,
-            state: String,
-        },
-        salaryRange: {
-            min: Number,
-            max: Number,
-            currency: String,
-            frequency: String,
-        },
-        employment: [String],
-        workTypes: [String],
-        isExternal: Boolean,
-        profilePic: String,
-        feedback: {
-            match_summary: String,
-            skill_note: String,
-            extra_note: String,
-        },
-    }],
     experience: {
         type: [String],
         default: []

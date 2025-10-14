@@ -8,6 +8,9 @@ const controller = require('../../controllers/jobseekers.controller')
 router.post('/registerJobSeeker', controller.registerJobSeeker)
 //get Job seeker
 router.get('/getJobseeker', controller.getJobseeker)
+    //count
+router.get('/getJobseekerCount', controller.getJobseekerCount)
+
 //update Profile
 router.patch('/updateProfile/:id', controller.updateProfile)
 

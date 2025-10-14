@@ -42,34 +42,40 @@ const employersSchema = new mongoose.Schema({
         type: {
             country: {
                 type: String
-            },
-            province: {
+            }, // e.g. "Philippines"
+            country_code: {
                 type: String
+            }, // e.g. "ph"
+            name: {
+                type: String
+            }, // e.g. "Quezon"
+            display_name: {
+                type: String
+            }, // e.g. "Quezon, Philippines"
+            lat: {
+                type: String
+            }, // e.g. "13.9"
+            lon: {
+                type: String
+            }, // e.g. "122"
+            province: {
+                type: String,
+                default: null
             },
             city: {
-                type: String
+                type: String,
+                default: null
             },
             postalCode: {
-                type: String
+                type: String,
+                default: null
             }
         },
         default: null
     },
-    hiredJS: {
-        type: [String],
-        default: []
-    },
     accountIncomplete: {
         type: Boolean,
         default: true
-    },
-    verificationDocs: {
-        type: [String]
-    }, //an array of pathfiles
-    verificationStatus: {
-        type: String,
-        enum: ["pending", "approved", "rejected"],
-        default: "pending"
     },
     role: {
         type: String,

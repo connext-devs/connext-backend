@@ -7,28 +7,24 @@ const {
 
 
 const joblistingsSchema = new mongoose.Schema({
-    _id:{
-        type:String,
-    },
+    _id: String,
     jobUID: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
+
     employerUID: {
         type: String,
-        required:true
-    },
-    companyName: {
-        type: String,
         required: true
-    },
+    }, // internal jobs only
+
     jobTitle: {
         type: String,
         required: true
     },
     jobTitleVector: {
-        type: Array,
+        type: Array
     },
     jobNormalized: {
         type: String,
@@ -40,58 +36,58 @@ const joblistingsSchema = new mongoose.Schema({
     jobDescription: {
         type: String
     },
-
     jobSkills: {
         type: [String],
         default: []
     },
+
     location: {
-        city: {
-            type: String,
-            required: true
-        },
+        country: String,
+        country_code: String,
+        name: String,
+        display_name: String,
+        lat: String,
+        lon: String,
         province: {
             type: String,
-            required: true
-        }, // was state
-        country: {
+            default: null
+        },
+        city: {
             type: String,
-            required: true
-        }, // new field
+            default: null
+        },
         postalCode: {
             type: String,
-            required: true
-        },
+            default: null
+        }
     },
+
     employment: {
         type: [String],
         default: []
-    }, // e.g., Full-time, Part-time
+    },
     workTypes: {
         type: [String],
         default: []
-    }, // e.g., Remote, Onsite
+    },
 
     salaryRange: {
-        min: Number,
-        max: Number,
+        min: {
+            type: Number,
+            default: null
+        },
+        max: {
+            type: Number,
+            default: null
+        },
         currency: {
             type: String,
-            default: 'PHP'
+            default: "PHP"
         },
         frequency: {
             type: String,
-            default: 'month'
-        },
-    },
-
-    jobNormalized: {
-        type: String
-    },
-
-    profilePic: {
-        type: String,
-        default: 'https://ik.imagekit.io/mnv8wgsbk/Public%20Images/placeholder.png?updatedAt=1756757645263',
+            default: "month"
+        }
     },
 
     isExternal: {
@@ -101,9 +97,10 @@ const joblistingsSchema = new mongoose.Schema({
     status: {
         type: Boolean,
         default: true
-    },
+    }
 }, {
     timestamps: true
-})
+});
+
 
 exports.joblistingsModel = mongoose.model('job_listings', joblistingsSchema)

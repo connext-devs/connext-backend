@@ -144,6 +144,37 @@ exports.postJobs = async (req, res) => {
     }
 };
 
+//Getting a single job posting that the employers have
+exports.getJob = async (req, res) => {
+    const {
+        jobUID
+    } = req.query
+
+    console.log(jobUID);
+    try {
+        const response = await joblistingsModel.findOne({
+            "jobUID": {
+                '$in': jobUID
+            }
+        }, {
+            jobTitleVector: 0
+        });
+
+        res.status(200).json({
+            success: true,
+            message: response
+        })
+
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            message: err
+        })
+    }
+
+}
+
+//Getting all of the job postings that the employers have
 exports.getJobs = async (req, res) => {
     const {
         employerUID
@@ -178,7 +209,7 @@ exports.updateJobs = async (req, res) => {
     try {
         const {
             jobUID
-        } = req.params; 
+        } = req.params;
 
         console.log(jobUID);
 
@@ -191,6 +222,7 @@ exports.updateJobs = async (req, res) => {
             workTypes,
             salaryRange,
             location,
+            status
         } = req.body;
 
         // Find the job
@@ -214,6 +246,7 @@ exports.updateJobs = async (req, res) => {
             workTypes,
             salaryRange,
             location,
+            status
         };
 
         // Remove undefined values

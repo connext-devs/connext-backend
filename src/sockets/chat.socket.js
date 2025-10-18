@@ -1,4 +1,3 @@
-// socket.js
 const userSockets = new Map(); // { userUID -> Set(socketId) }
 const Conversation = require("../models/chats/conversation.model");
 const Message = require("../models/chats/message.model");

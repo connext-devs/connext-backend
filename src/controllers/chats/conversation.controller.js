@@ -1,3 +1,4 @@
+const conversationModel = require("../../models/chats/conversation.model");
 const Conversation = require("../../models/chats/conversation.model")
 const Message = require("../../models/chats/message.model")
 
@@ -78,7 +79,6 @@ exports.getUserConversations = async (req, res) => {
       {
         $unwind: { path: "$employer", preserveNullAndEmptyArrays: true },
       },
-      // 🔗 Join with applications to get jobUID + status
       {
         $lookup: {
           from: "applications",
@@ -88,8 +88,6 @@ exports.getUserConversations = async (req, res) => {
         },
       },
       { $unwind: { path: "$application", preserveNullAndEmptyArrays: true } },
-
-      // 🔗 Join with job_listings to fetch jobTitle
       {
         $lookup: {
           from: "job_listings",
@@ -112,13 +110,29 @@ exports.getUserConversations = async (req, res) => {
           employerName: "$employer.companyName",
           applicationStatus: "$application.status",
           jobUID: "$application.jobUID",
-          jobTitle: "$job.jobTitle", // 👈 depends on your schema field name
+          jobTitle: "$job.jobTitle", 
         },
       },
       { $sort: { updatedAt: -1 } },
     ]);
 
     res.status(200).json(conversations);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// Get all conversations for a user
+exports.getConversation = async (req, res) => {
+  try {
+      const {conversationUID} = req.params
+
+      const conversation = await conversationModel.findOne({'conversationUID':conversationUID})
+
+      console.log(conversation);
+      console.log(conversationUID);
+    res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

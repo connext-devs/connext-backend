@@ -230,6 +230,20 @@ exports.getApplicantCounts = async (req, res) => {
               }, 1, 0]
             }
           },
+          hired: {
+            $sum: {
+              $cond: [{
+                $eq: ["$status", "hired"]
+              }, 1, 0]
+            }
+          },
+           contacted: {
+            $sum: {
+              $cond: [{
+                $eq: ["$status", "contacted"]
+              }, 1, 0]
+            }
+          },
         },
       },
     ]);

@@ -42,6 +42,7 @@ const notificationSchema = new mongoose.Schema({
             'application_rejected',
             'application_hired',
             'job_update',
+            'meeting',
             'system',
         ],
         default: 'system',

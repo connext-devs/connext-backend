@@ -1,17 +1,10 @@
 const userSockets = new Map(); // { userUID -> Set(socketId) }
 const Conversation = require("../models/chats/conversation.model");
 const Message = require("../models/chats/message.model");
-const {
-  employersModel
-} = require("../models/employers/employers.model");
+const { employersModel } = require("../models/employers/employers.model");
 
-//for cteaing notification
-const {
-  createNotificationFunction
-} = require("../controllers/notifications.controller");
-
-
-
+// for creating notification
+const { createNotificationFunction } = require("../controllers/notifications.controller");
 
 // --- Socket Utilities --- //
 function addUserSocket(userId, socketId) {
@@ -36,7 +29,7 @@ function getAllConnectedUsers() {
   for (const [userId, socketIds] of userSockets.entries()) {
     users.push({
       userId,
-      sockets: [...socketIds]
+      sockets: [...socketIds],
     });
   }
   return users;
@@ -64,8 +57,14 @@ function chatSocket(io) {
       socket.join(userId);
       console.log(getAllConnectedUsers(), " connected users");
 
+      // Emit presence update for user online
+      io.emit("userPresenceUpdate", {
+        userId,
+        online: true,
+      });
+
       io.emit("notification", {
-        message: "This is a global test notification"
+        message: "This is a global test notification",
       });
     });
 
@@ -82,64 +81,42 @@ function chatSocket(io) {
     });
 
     // send message
-    socket.on("sendMessage", async ({
-      conversationUID,
-      senderUID,
-      text
-    }) => {
+    socket.on("sendMessage", async ({ conversationUID, senderUID, text }) => {
       try {
-        const conversation = await Conversation.findOne({
-          conversationUID
-        });
+        const conversation = await Conversation.findOne({ conversationUID });
         if (!conversation) return;
 
         // Block seeker if locked
         if (conversation.status === "locked" && senderUID === conversation.seekerUID) return;
 
-        const employer = await employersModel.findOne({
-          employerUID: conversation.employerUID,
-        });
-
+        const employer = await employersModel.findOne({ employerUID: conversation.employerUID });
 
         // Unlock if employer sends first
         if (conversation.status === "locked" && senderUID === conversation.employerUID) {
-          //getting the application to update it imports lazy loading
-          const {
-            updateApplicationFunction
-          } = require("../controllers/jobseekers/applications.controller");
+          const { updateApplicationFunction } = require("../controllers/jobseekers/applications.controller");
 
+          // update application's status to contacted by employer
+          await updateApplicationFunction(conversation.applicationID, "contacted");
 
-          //update the application's status to contacted by the employer
-          await updateApplicationFunction(conversation.applicationID, "contacted")
-
-          //notifications that the employer sents a message to JOBSEEKER
+          // notify jobseeker employer sent a message
           const notifPayload = {
             receiverUID: conversation.seekerUID,
             senderUID: conversation.employerUID,
             title: `${employer.companyName} sent you a message`,
             message: text,
             type: "message",
-            data: {
-              conversationUID
-            },
+            data: { conversationUID },
             receiverRole: "jobseeker",
           };
 
-          const notif = await createNotificationFunction({
-            ...notifPayload,
-            io
-          });
+          const notif = await createNotificationFunction({ ...notifPayload, io });
           console.log(notif, "notiffffff");
 
           conversation.status = "open";
         }
 
         // create message
-        const message = await Message.create({
-          conversationUID,
-          senderUID,
-          text
-        });
+        const message = await Message.create({ conversationUID, senderUID, text });
 
         // update conversation metadata
         conversation.lastMessage = text;
@@ -151,9 +128,7 @@ function chatSocket(io) {
 
         // also emit to other user if connected elsewhere
         const otherUID =
-          senderUID === conversation.employerUID ?
-          conversation.seekerUID :
-          conversation.employerUID;
+          senderUID === conversation.employerUID ? conversation.seekerUID : conversation.employerUID;
 
         emitToUser(io, otherUID, "newMessage", message);
       } catch (err) {
@@ -164,17 +139,26 @@ function chatSocket(io) {
     // disconnect
     socket.on("disconnect", () => {
       console.log("❌ Disconnected:", socket.id);
+      let disconnectedUserId = null;
       for (const [uid, socketIds] of userSockets.entries()) {
         if (socketIds.has(socket.id)) {
           removeUserSocket(uid, socket.id);
+          disconnectedUserId = uid;
           break;
         }
+      }
+      // If user has no more connected sockets, emit offline presence update
+      if (disconnectedUserId !== null && !userSockets.has(disconnectedUserId)) {
+        io.emit("userPresenceUpdate", {
+          userId: disconnectedUserId,
+          online: false,
+        });
+        console.log(`User offline: ${disconnectedUserId}`);
       }
     });
   });
 }
 
-// --- Export Everything You Need --- //
 module.exports = {
   chatSocket,
   emitToUser,

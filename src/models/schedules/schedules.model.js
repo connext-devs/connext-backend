@@ -42,7 +42,7 @@ const meetingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'on-call', 'cancelled', 'missed', 'completed'],
+    enum: ['pending', 'on-call', 'cancelled', 'missed', 'completed','cancelled'],
     default: 'pending'
   },
   meetingLink: {

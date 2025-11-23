@@ -157,7 +157,8 @@ exports.getJobInteractions = async (req, res) => {
           "jobDetails.status": 1,
           "jobDetails.createdAt": 1,
           "jobDetails.isExternal": 1,
-          "jobDetails.company": 1
+          "jobDetails.company": 1,
+          "jobDetails.link":1
         }
       }
     ]);

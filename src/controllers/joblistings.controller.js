@@ -99,6 +99,7 @@ exports.postJobs = async (req, res) => {
 
     try {
         const jobUID = `job_${nanoid(10)}`;
+        
 
 
 
@@ -125,7 +126,6 @@ exports.postJobs = async (req, res) => {
             jobTitleVector: Array.from(emb[0].data)
         }
 
-
         console.log(payload, 'payyyy');
 
         const newJob = await joblistingsModel.create(payload);
@@ -143,6 +143,8 @@ exports.postJobs = async (req, res) => {
         });
     }
 };
+
+
 
 //Getting a single job posting that the employers have
 async function getJobFunction(jobUID) {

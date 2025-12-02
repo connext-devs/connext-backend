@@ -30,6 +30,7 @@
     "onnxruntime-node": "^1.22.0-rev",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
+    "selenium-webdriver": "^4.38.0",
     "socket.io": "^4.8.1",
     "tokenizers": "^0.13.3",
     "uuid": "^11.1.0"

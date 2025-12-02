@@ -32,6 +32,9 @@ const schedulesRoute = require('./schedules/schedules.routes')
     //notifications
 const notificationsRoute = require('./notifications/notifications.routes')
 
+    //scraping
+const scrapingRoute = require('./admins/scraping.route')
+
 
 
 //OTP Routes
@@ -65,6 +68,9 @@ router.use('/api/schedules',schedulesRoute)
 
 //Notifications Routes
 router.use('/api/notifications',notificationsRoute)
+
+//Scraping Routes
+router.use('/api/scraping', scrapingRoute)
 
 
 

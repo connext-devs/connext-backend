@@ -103,7 +103,7 @@ exports.getNotifications = async (req, res) => {
         const {
             role,
             limit
-        } = req.query; // allow override via ?limit=5
+        } = req.query; 
 
         if (!receiverUID) {
             return res.status(400).json({
@@ -112,8 +112,9 @@ exports.getNotifications = async (req, res) => {
             });
         }
 
-        // default limit to 3 if not provided
-        const notifLimit = Number(limit) || 3;
+        let notifLimit = Number(limit) 
+
+        console.log(notifLimit,'limittt', limit);
 
         // find latest notifications
         const notifications = await notificationModel
@@ -123,7 +124,7 @@ exports.getNotifications = async (req, res) => {
             .sort({
                 createdAt: -1
             })
-            .limit(notifLimit);
+            .limit(notifLimit ?? undefined);
 
         let enrichedNotifications = notifications;
 

@@ -6,6 +6,10 @@ const controller = require('../../controllers/jobseekers/job_interaction.control
 //get requests
 route.get('/getJobInteraction', controller.getJobInteractions)
 
+//update
+route.patch('/updateJobInteraction/:jobInteractionID', controller.updateJobInteraction)
+
+
 //post requests
 route.post('/createJobInteraction', controller.createJobInteraction)
 

@@ -45,6 +45,48 @@ exports.createJobInteraction = async (req, res) => {
     }
 };
 
+//update Job interact
+exports.updateJobInteraction = async (req, res) => {
+    try {
+        const { jobInteractionID } = req.params; // or req.body, depending on your routing
+        const updateData = req.body;
+
+        if (!jobInteractionID) {
+            return res.status(400).json({
+                success: false,
+                error: "jobInteractionID is required",
+            });
+        }
+
+        const updated = await jobInteractionModel.findOneAndUpdate(
+            { jobInteractionID },
+            { $set: updateData },
+            { new: true } // return updated document
+        );
+
+        if (!updated) {
+            return res.status(404).json({
+                success: false,
+                error: "Job interaction not found",
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Job interaction updated successfully",
+            payload: updated,
+        });
+
+    } catch (err) {
+        console.error("❌ Error updating job interaction:", err);
+        res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+};
+
+
 // Get Job Interactions by seekerUID
 exports.getJobInteractions = async (req, res) => {
   const { seekerUID, action } = req.query;

@@ -827,8 +827,11 @@ exports.getScrapeJobs = async (req, res) => {
         } = req.query
         console.log(batchUID, 'batchUID');
         const batches = await joblistingsModel.find({
-            batchUID: batchUID
-        })
+                batchUID: batchUID
+            }, {
+                jobTitleVector: 0
+            } 
+        );
 
         res.json({
             success: true,
@@ -888,16 +891,24 @@ exports.getAllScrapedJobs = async (req, res) => {
 //deleting scrape jobs
 exports.deleteScrapeJob = async (req, res) => {
     try {
-        const { jobUID } = req.query;
+        const {
+            jobUID
+        } = req.query;
 
         if (!jobUID) {
-            return res.status(400).json({ error: "jobUID is required" });
+            return res.status(400).json({
+                error: "jobUID is required"
+            });
         }
 
-        const deleted = await joblistingsModel.findOneAndDelete({ jobUID });
+        const deleted = await joblistingsModel.findOneAndDelete({
+            jobUID
+        });
 
         if (!deleted) {
-            return res.status(404).json({ error: "Job not found" });
+            return res.status(404).json({
+                error: "Job not found"
+            });
         }
 
         res.json({
@@ -908,6 +919,8 @@ exports.deleteScrapeJob = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({
+            error: err.message
+        });
     }
 };

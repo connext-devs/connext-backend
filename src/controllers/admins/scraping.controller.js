@@ -606,23 +606,6 @@ function extractEmployment(description) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //------------ POSTING JOBS ENDPOINT
 // NORMALIZATION
 // Synonyms

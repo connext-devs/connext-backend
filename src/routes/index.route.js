@@ -22,6 +22,7 @@ const messageRoute = require('./chats/message.route')
     //admins
 const verificationRoute = require('./admins/verification_request.route')
 const adminRoute = require('./admins/admin.route')
+const analyticsRoute = require('./admins/analytics.route')
 
     //oauth
 const oauthRoute = require('./oauth/oauth.routes')
@@ -59,6 +60,7 @@ router.use('/api/message', messageRoute)
 //Admin controls
 router.use('/api/admins', verificationRoute)
 router.use('/api/admins', adminRoute)
+router.use('/api/analytics', analyticsRoute)
 
 //oauth
 router.use('/oauth', oauthRoute)

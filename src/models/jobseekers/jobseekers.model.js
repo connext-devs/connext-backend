@@ -46,22 +46,22 @@ const jobseekersSchema = new mongoose.Schema({
         type: {
             country: {
                 type: String
-            }, // e.g. "Philippines"
+            },
             country_code: {
                 type: String
-            }, // e.g. "ph"
+            }, 
             name: {
                 type: String
-            }, // e.g. "Quezon"
+            }, 
             display_name: {
                 type: String
-            }, // e.g. "Quezon, Philippines"
+            }, 
             lat: {
                 type: String
-            }, // e.g. "13.9"
+            }, 
             lon: {
                 type: String
-            }, // e.g. "122"
+            }, 
             province: {
                 type: String,
                 default: null
@@ -78,28 +78,32 @@ const jobseekersSchema = new mongoose.Schema({
         default: null
     },
     education: {
-        type: {
+        type: [{
+            schoolName: {
+                type: String,
+                default: null,
+            },
             degree: {
                 type: String,
                 default: null
             },
-            school: {
+            fieldOfStudy: {
                 type: String,
                 default: null
             },
-            status: {
-                type: String,
-                default: null
-            },
-            yearLevel: {
+            startYear: {
                 type: Number,
                 default: null
             },
-            graduationYear: {
+            endYear: {
+                type: Number,
+                default: null
+            },
+            isCurrent: {
                 type: Number,
                 default: null
             }
-        },
+        }],
         default: null
     },
 

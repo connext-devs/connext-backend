@@ -16,4 +16,7 @@ router.get('/getJobs', controller.getJobs)
 // Update a job (using _id from params)
 router.patch('/updateJobs/:jobUID', controller.updateJobs);
 
+//delete job
+router.delete('/deleteJob', controller.deleteJob)
+
 module.exports = router

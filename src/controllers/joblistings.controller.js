@@ -15,6 +15,12 @@ const {
     joblistingsModel
 } = require('../models/employers/joblistings.model')
 
+const {
+    applicationsModel
+} = require('../models/jobseekers/applications.model')
+
+
+
 // NORMALIZATION
 // Synonyms
 const synonyms = {
@@ -328,3 +334,37 @@ exports.updateJobs = async (req, res) => {
         });
     }
 };
+
+
+
+exports.deleteJob = async (req,res) => {
+    try {
+        const {
+            jobUID
+        } = req.query;
+
+        console.log(jobUID, 'delete');
+        //deleting the job
+        const job = await joblistingsModel.deleteOne({jobUID})
+        //then deleting orphans 
+        const delApps = await applicationsModel.deleteMany({'jobUID':jobUID})
+
+
+
+        console.log(job, 'deleted job');
+        console.log(delApps, 'deleted applications');
+
+        console.log('Successfully Deleted Jobs & Applications', job, delApps);
+
+        res.json({
+            success: true,
+            message: `Successfully Deleted job: ${jobUID} & its applications`
+        });
+    } catch (err) {
+        console.log("Error Deleting job: ", err);
+        res.status(500).json({
+            success:false,
+            error: err.message,
+        });
+    }
+}

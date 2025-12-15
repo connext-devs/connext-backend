@@ -519,22 +519,19 @@ function parseLocation(rawLocation) {
         return null;
     }
 
-    // For demo, parse by commas (common format: City, Province, Country)
     const parts = rawLocation.split(',').map(s => s.trim());
 
-    // Heuristic: assign from right to left: last=country, preceding=province, preceding=city
     const len = parts.length;
     const country = len > 0 ? parts[len - 1] : null;
     const province = len > 1 ? parts[len - 2] : null;
     const city = len > 2 ? parts[len - 3] : null;
 
-    // If only display_name or country exists, others null
     return {
         display_name: rawLocation,
         city: city || null,
         province: province || null,
         country: country || null,
-        postalCode: null, // no postal code info from RemoteOK UI
+        postalCode: null, 
         lat: null,
         long: null
     };
@@ -600,8 +597,6 @@ function extractEmployment(description) {
 }
 
 //------------------------------- end of JOB SCRAPER
-
-
 
 
 

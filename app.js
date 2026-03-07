@@ -36,7 +36,13 @@ app.use(morgan('dev'))
 app.use(session({
   secret: process.env.EXPRESS_SESSION_KEY,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    secure: false, // Allow cookies over HTTP (ngrok uses https proxy but terminates SSL)
+    httpOnly: true,
+    maxAge: 10 * 60 * 1000, // 10 minutes
+    sameSite: 'lax' // Allow cookies in OAuth redirects
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

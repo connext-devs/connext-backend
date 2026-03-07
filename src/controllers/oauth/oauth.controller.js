@@ -59,7 +59,7 @@ exports.googlePopup = (req, res, next) => {
     userUID
   }
 
-  passport.authenticate('google', {
+  passport.authenticate('google-calendar', {
     scope: [
       'email',
       'https://www.googleapis.com/auth/calendar',
@@ -73,7 +73,7 @@ exports.googlePopup = (req, res, next) => {
 
 
 exports.googleCallback = [
-  passport.authenticate('google', {
+  passport.authenticate('google-calendar', {
     failureRedirect: '/auth/failure'
   }),
   async (req, res) => {

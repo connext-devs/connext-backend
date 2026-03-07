@@ -8,6 +8,23 @@ exports.submitVerification = async (req, res) => {
   } = req.body;
 
   try {
+    // Check if an active verification request already exists
+    const existingRequest = await VerificationRequest.findOne({
+      employerUID,
+      verificationStatus: { $in: ['pending', 'approved'] }
+    });
+
+    if (existingRequest) {
+      console.log("⚠️ Verification request already exists:", existingRequest._id);
+      return res.status(200).json({
+        success: true,
+        message: "Verification request already submitted",
+        data: existingRequest,
+        alreadyExists: true,
+      });
+    }
+
+    // Create new verification request
     const request = await VerificationRequest.create({
       employerUID,
       verificationDocs,

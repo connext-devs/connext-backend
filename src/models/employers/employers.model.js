@@ -19,6 +19,11 @@ const employersSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
+    authProvider: {
+        type: String,
+        enum: ['password', 'google'],
+        default: 'password'
+    },
     companyName: {
         type: String,
         required: true

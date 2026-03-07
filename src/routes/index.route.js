@@ -27,6 +27,9 @@ const analyticsRoute = require('./admins/analytics.route')
     //oauth
 const oauthRoute = require('./oauth/oauth.routes')
 
+    //auth (JWT generation for OAuth users)
+const authRoute = require('./auth.route')
+
     //schedules
 const schedulesRoute = require('./schedules/schedules.routes')
 
@@ -64,6 +67,9 @@ router.use('/api/analytics', analyticsRoute)
 
 //oauth
 router.use('/oauth', oauthRoute)
+
+//auth (JWT generation for OAuth)
+router.use('/api/auth', authRoute)
 
 //Schedules Routes
 router.use('/api/schedules',schedulesRoute)
